@@ -1,7 +1,11 @@
 import streamlit as st
 import functions
 import complete
+import time
+from datetime import datetime
 
+currentTime = time.strftime("%I:%M %p")
+currentDate = datetime.today().strftime("%m-%d-%Y")
 # Initialize session state variables
 if "processes" not in st.session_state:
     st.session_state["processes"] = functions.get_processes()
@@ -47,6 +51,8 @@ def mark_as_completed(task):
 
 # Streamlit app title
 st.title("Task Manager")
+st.subheader(f"The current date is: {currentDate}")
+st.subheader(f"The current time is: {currentTime}")
 st.text_input(label="", placeholder="Open new process...",
               on_change=add_process, key="new_processes")
 # Radio button for user selection
