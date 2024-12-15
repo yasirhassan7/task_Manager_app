@@ -48,7 +48,6 @@ def mark_as_completed(task):
         st.session_state["endProcess"].append(task)
         write_file("endProcess.txt", [t for t in st.session_state["endProcess"]])
 
-
 # Streamlit app title
 st.title("Task Manager")
 st.subheader(f"The current date is: {currentDate}")
