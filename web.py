@@ -1,29 +1,63 @@
 import streamlit as st
 import functions
+import complete
 
-
-
-if "todos" not in st.session_state:
+# Initialize session state variables
+if "processes" not in st.session_state:
     st.session_state["processes"] = functions.get_processes()
 
+if "endProcess" not in st.session_state:
+    st.session_state["endProcess"] = complete.get_endProcess()
+
+list_files = {'Current Processes': 'processes.txt', 'Processes Completed': 'endProcess.txt'}
+
 def add_process():
-    todo = st.session_state["new_processes"] + "\n"
+    process = st.session_state["new_processes"] + "\n"
     st.session_state["processes"].append(process)
     functions.write_processes(st.session_state["processes"])
-    st.session_state["new_process"] = ""  # Clear input field
+    st.session_state['new_processes'] = ""
 
+def read_file(file_path):
+    """Reads the content of a file and returns it as a list of lines."""
+    try:
+        with open(file_path, "r") as file:
+            return file.readlines()
+    except FileNotFoundError:
+        return ["File not found."]
+
+
+def write_file(file_path, content):
+    """Writes a list of lines to a file."""
+    with open(file_path, "w") as file:
+        file.writelines(content)
+
+
+def mark_as_completed(task):
+    """Moves a task from processes.txt to endProcess.txt."""
+    # Remove task from processes
+    if task in st.session_state["processes"]:
+        st.session_state["processes"].remove(task)
+        write_file("processes.txt", [t + "\n" for t in st.session_state["processes"]])
+
+    # Add task to endProcess
+    if task not in st.session_state["endProcess"]:
+        st.session_state["endProcess"].append(task)
+        write_file("endProcess.txt", [t for t in st.session_state["endProcess"]])
+
+
+# Streamlit app title
 st.title("Task Manager")
-st.subheader("Here are my current processes.")
-#st.write("This is the list of current processes."+"\n")
-st.button(label = "Open new process", on_click = add_process)
+st.text_input(label="", placeholder="Open new process...",
+              on_change=add_process, key="new_processes")
+# Radio button for user selection
+columns = st.radio("Select Output Value:", ['Current Processes', 'Processes Completed'])
 
-#st.text_input(label="", placeholder="Open new process...",
-              #on_change=add_todo, key='new_todo')
+# Dynamically display file contents
+if columns == "Current Processes":
+    for i, task in enumerate(st.session_state["processes"]):
+        if st.checkbox(task, key=f"current_{i}_{task}"):
+            mark_as_completed(task)
 
-for index, todo in enumerate(st.session_state["processes"]):
-    if st.checkbox(todo, key=f"process_{index}"):
-        st.session_state["processes"].pop(index)
-        functions.write_processes(st.session_state["processes"])
-        break  # Exit the loop to avoid issues with modifying the list
-
-
+elif columns == "Processes Completed":
+    for task in st.session_state["endProcess"]:
+        st.text(task)
