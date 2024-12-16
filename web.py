@@ -92,7 +92,7 @@ elif columns == "Processes Completed":
         col1, col2 = st.columns([3, 1])
         with col1:
             # Display the task and allow editing
-            new_value = st.text_input(f"Task {i+1}:", task, key=f"edit_completed_{i}_{task}")
+            new_value = st.text_input(f"Completed Process{i+1}:", task, key=f"edit_completed_{i}_{task}")
         with col2:
             # Save button to update the task
             if st.button("Update Process", key=f"save_completed_{i}_{task}"):
