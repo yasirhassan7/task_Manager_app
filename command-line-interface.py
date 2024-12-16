@@ -1,4 +1,6 @@
 import time
+from functions import get_processes, write_processes
+
 
 now = time.strftime("%b-%d-%Y %H:%M:%S %p")
 print("It is", now)
@@ -9,37 +11,45 @@ while True:
     user_action = user_action.strip()
 
     if user_action.startswith("add"):
-        todo = user_action[4:]
+        process = user_action[4:]
 
-        todos = get_todos()
+        processes= get_processes()
 
-        todos.append(todo + '\n')
+        processes.append(process + '\n')
 
-        write_todos(todos)
+        write_processes(processes)
 
     elif user_action.startswith("show"):
-        todo = user_action[4:]
+        try:
+            process = user_action[4:]
 
-        todos = get_todos()
+            processes = get_processes()
 
-        #new_todos = [item.strip('\n') for item in todos] this is list comprehension
+            #new_processes = [item.strip('\n') for item in processes] #this is list comprehension
 
-        for index, item in enumerate(todos):
-            item = item.strip('\n') #same as line 23
-            row = f"{index + 1}-{item}"
-            print(row)
+            for index, item in enumerate(processes):
+                item = item.strip('\n') #same as line 23
+                row = f"{index + 1}-{item}"
+                print(row)
+
+
+
+        except IndexError:
+            print("There is nothing currently processing. Please open a new process by adding a new process")
+        continue
+
 
     elif user_action.startswith("edit"):
         try:
             number = int(user_action[5:])
             number = number - 1
 
-            todos = get_todos()
+            processes = get_processes()
 
-            new_todo = input("Enter new todo:")
-            todos[number] = new_todo + '\n'
+            new_process = input("Update process:")
+            processes[number] = new_process + '\n'
 
-            write_todos(todos)
+            write_processes(processes)
 
         except ValueError:
             print("Your command is not valid.")
@@ -49,15 +59,15 @@ while True:
         try:
             number = int(user_action[9:])
 
-            todos = get_todos()
+            processes = get_processes()
 
             index = number - 1
-            todo_to_remove = todos[index].strip('\n')
-            todos.pop(index)
+            process_to_remove = processes[index].strip('\n')
+            processes.pop(index)
 
-            write_todos(todos)
+            write_processes(processes)
 
-            message = f"Todo {todo_to_remove} was completed from the list."
+            message = f"Process {process_to_remove} was completed from the list."
             print(message)
 
         except IndexError:

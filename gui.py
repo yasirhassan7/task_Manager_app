@@ -1,26 +1,31 @@
-import functions
-import FreeSimpleGUI as sg
-import time
 import os
+import time
+import complete
+import pySimpleGui as sg
+import functions
 
 if not os.path.exists("processes.txt"):
     with open("processes.txt", 'w') as file:
         pass
 
+if not os.path.exists("endProcess.txt"):
+    with open("endProcess.txt", 'w') as file:
+        pass
+
 sg.theme("DarkPurple4")
+clock = sg.Text('', key='clock', size=(20, 1))
 
-
-label = sg.Text("Type in a to-do")
-input_box = sg.InputText(tooltip="Enter todo", key="todo")
+label = sg.Text("Open a new process")
+input_box = sg.InputText(tooltip="Open new process", key="process")
 add_button = sg.Button("Add")
-list_box = sg.Listbox(values=functions.get_todos(), key='todos',
+list_box = sg.Listbox(values=functions.get_processes(), key='processes',
                       enable_events=True, size=[45,10])
 edit_button = sg.Button("Edit")
 complete_button = sg.Button("Complete")
 exit_button = sg.Button("Exit")
 
 
-window = sg.Window('My To-Do App',
+window = sg.Window('Task Manager',
                    layout=[[clock],
                            [label],
                            [input_box, add_button],
@@ -34,46 +39,44 @@ while True:
     window["clock"].update(value=time.strftime("%b %d, %Y %H:%M:%S"))
     match event:
         case 'Add':
-            todos = functions.get_todos()
-            new_todo = values['todo'] +"\n"
-            todos.append(new_todo)
-            functions.write_todos(todos)
-            window['todos'].update(values=todos)
+            processes = functions.get_processes()
+            new_processes = values['process'] +"\n"
+            processes.append(new_processes)
+            functions.write_processes(processes)
+            window['processes'].update(values=processes)
 
 
         case "Edit":
             try:
-                todo_edit = values['todos'][0]
-                new_todo = values['todo'] +"\n"
+                todo_edit = values['processes'][0]
+                new_process = values['process'] +"\n"
 
-                todos = functions.get_todos()
-                index = todos.index(todo_edit)
-                todos[index] = new_todo
-                functions.write_todos(todos)
-                window['todos'].update(values=todos)
+                processes = functions.get_processes()
+                index = processes.index(process_edit)
+                processes[index] = new_processes
+                functions.write_processes(processes)
+                window['processes'].update(values=processes)
             except IndexError:
-                sg.popup('Please select an item first to edit.', font=('Helvetica', 20))
+                sg.popup('Please select a process first to update.', font=('Helvetica', 20))
 
         case "Complete":
             try:
-               todo_complete = values['todos'][0]
-               todos = functions.get_todos()
-               todos.remove(todo_complete)
-               functions.write_todos(todos)
-               window['todos'].update(values=todos)
-               window['todo'].update(value='')
+               process_complete = values['processes'][0]
+               processes = functions.get_processes()
+               processes.remove(process_complete)
+               functions.write_processes(processes)
+               window['processes'].update(values=processes)
+               window['process'].update(value='')
             except IndexError:
-                sg.popup('Please select an item first to complete.', font=('Helvetica', 20))
+                sg.popup('Please select a process first to complete it.', font=('Helvetica', 20))
 
         case "Exit":
             break
 
-        case 'todos':
-            window['todo'].update(value=values['todos'][0])
+        case 'processes':
+            window['process'].update(value=values['processes'][0])
 
         case sg.WIN_CLOSED: #closes the program when the red close button is pushed
             break
-
-
 
 window.close()
