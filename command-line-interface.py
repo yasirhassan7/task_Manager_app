@@ -13,9 +13,9 @@ while True:
     if user_action.startswith("add"):
         process = user_action[4:]
 
-        processes= get_processes()
+        processes = get_processes()
 
-        processes.append(process + '\n')
+        processes.append(process + "\n")
 
         write_processes(processes)
 
@@ -25,19 +25,18 @@ while True:
 
             processes = get_processes()
 
-            #new_processes = [item.strip('\n') for item in processes] #this is list comprehension
+            # new_processes = [item.strip('\n') for item in processes] #this is list comprehension
 
             for index, item in enumerate(processes):
-                item = item.strip('\n') #same as line 23
+                item = item.strip("\n")  # same as line 23
                 row = f"{index + 1}-{item}"
                 print(row)
 
-
-
         except IndexError:
-            print("There is nothing currently processing. Please open a new process by adding a new process")
+            print(
+                "There is nothing currently processing. Please open a new process by adding a new process"
+            )
         continue
-
 
     elif user_action.startswith("edit"):
         try:
@@ -47,13 +46,13 @@ while True:
             processes = get_processes()
 
             new_process = input("Update process:")
-            processes[number] = new_process + '\n'
+            processes[number] = new_process + "\n"
 
             write_processes(processes)
 
         except ValueError:
             print("Your command is not valid.")
-            continue #this starts the loop for the beginning
+            continue  # this starts the loop for the beginning
 
     elif user_action.startswith("complete"):
         try:
@@ -62,7 +61,7 @@ while True:
             processes = get_processes()
 
             index = number - 1
-            process_to_remove = processes[index].strip('\n')
+            process_to_remove = processes[index].strip("\n")
             processes.pop(index)
 
             write_processes(processes)

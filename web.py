@@ -14,17 +14,20 @@ import functions
 import complete
 
 
-
-if "processes" not in st.session_state or not isinstance(st.session_state["processes"], list):
+if "processes" not in st.session_state or not isinstance(
+    st.session_state["processes"], list
+):
     st.session_state["processes"] = functions.get_processes()
 
 
-
-if "endProcess" not in st.session_state or not isinstance(st.session_state["endProcess"], list):
+if "endProcess" not in st.session_state or not isinstance(
+    st.session_state["endProcess"], list
+):
     st.session_state["endProcess"] = complete.get_endProcess()
 
 if "new_processes" not in st.session_state:
     st.session_state["new_processes"] = ""  # Initialize input value
+
 
 def get_end_process():
     """
@@ -43,11 +46,13 @@ def write_file(file_path, content):
     with open(file_path, "w", encoding="utf-8") as file:
         file.writelines(content)
 
+
 def add_process():
     process = st.session_state["new_processes"] + "\n"
     st.session_state["processes"].append(process)
     functions.write_processes(st.session_state["processes"])
-    st.session_state['new_processes'] = ""
+    st.session_state["new_processes"] = ""
+
 
 def read_file(file_path):
     """Reads the content of a file and returns it as a list of lines."""
@@ -87,18 +92,24 @@ st.subheader(f"The current date is: {currentDate}")
 st.subheader(f"The current time is: {currentTime}")
 
 
-
 # Input for adding new processes
-st.text_input(label="", placeholder="Open new process...", key="new_processes",
+st.text_input(
+    label="",
+    placeholder="Open new process...",
+    key="new_processes",
     on_change=lambda: (
         st.session_state["processes"].append(st.session_state["new_processes"]),
-        st.session_state.update({"new_processes": ""})))  # Clear the input field
+        st.session_state.update({"new_processes": ""}),
+    ),
+)  # Clear the input field
 
 
 # Radio button for user selection
-columns = st.radio("Select Output Value:",
-                   ['Current Processes', 'Processes Completed'],
-                   key="selection")
+columns = st.radio(
+    "Select Output Value:",
+    ["Current Processes", "Processes Completed"],
+    key="selection",
+)
 
 # Dynamically display file contents
 if columns == "Current Processes":
@@ -113,14 +124,21 @@ if columns == "Current Processes":
             # Update button directly fetches the corresponding textbox value
             if st.button("Update Process", key=f"update_btn_{i}"):
                 st.session_state["processes"][i] = new_value
-                functions.write_processes(st.session_state["processes"])  # Save updates to the file
+                functions.write_processes(
+                    st.session_state["processes"]
+                )  # Save updates to the file
         with col3:
             # Complete Process button moves the task
             if st.button("Complete Process", key=f"complete_btn_{i}"):
-                st.session_state["endProcess"].append(st.session_state["processes"].pop(i))
-                functions.write_processes(st.session_state["processes"])  # Save updated processes
-                functions.write_processes(st.session_state["endProcess"])  # Save completed processes
-
+                st.session_state["endProcess"].append(
+                    st.session_state["processes"].pop(i)
+                )
+                functions.write_processes(
+                    st.session_state["processes"]
+                )  # Save updated processes
+                functions.write_processes(
+                    st.session_state["endProcess"]
+                )  # Save completed processes
 
 
 elif columns == "Processes Completed":
@@ -128,7 +146,9 @@ elif columns == "Processes Completed":
         col1, col2 = st.columns([3, 1])
         with col1:
             # Display the task and allow editing
-            new_value = st.text_input(f"Completed Process{i+1}:", task, key=f"edit_completed_{i}_{task}")
+            new_value = st.text_input(
+                f"Completed Process{i+1}:", task, key=f"edit_completed_{i}_{task}"
+            )
         with col2:
             # Save button to update the task
             if st.button("Update Process", key=f"save_completed_{i}_{task}"):
@@ -144,4 +164,3 @@ if st.button("Exit"):
             st.stop()
         if st.button("No, stay"):
             st.empty()  # Clear the warning message
-
