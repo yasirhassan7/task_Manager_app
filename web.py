@@ -26,7 +26,7 @@ if "endProcess" not in st.session_state or not isinstance(st.session_state["endP
 if "new_processes" not in st.session_state:
     st.session_state["new_processes"] = ""  # Initialize input value
 
-def get_endProcess():
+def get_end_process():
     """
     Reads and returns the contents of the 'endProcess.txt' file as a list of lines.
 
@@ -58,22 +58,22 @@ def read_file(file_path):
         return ["File not found."]
 
 
-def write_file(file_path, content):
+def writefile(file_path, content):
     """Writes a list of lines to a file."""
     with open(file_path, "w") as file:
         file.writelines(content)
 
 
-def mark_as_completed(task):
+def mark_as_completed(tasks):
     """Moves a task from processes.txt to endProcess.txt."""
     # Remove task from processes
-    if task in st.session_state["processes"]:
-        st.session_state["processes"].remove(task)
+    if tasks in st.session_state["processes"]:
+        st.session_state["processes"].remove(tasks)
         write_file("processes.txt", [t + "\n" for t in st.session_state["processes"]])
 
     # Add task to endProcess
-    if task not in st.session_state["endProcess"]:
-        st.session_state["endProcess"].append(task)
+    if tasks not in st.session_state["endProcess"]:
+        st.session_state["endProcess"].append(tasks)
         write_file("endProcess.txt", [t + "\n" for t in st.session_state["endProcess"]])
 
 
@@ -144,3 +144,4 @@ if st.button("Exit"):
             st.stop()
         if st.button("No, stay"):
             st.empty()  # Clear the warning message
+
