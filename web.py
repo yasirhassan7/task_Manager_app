@@ -1,17 +1,47 @@
-import streamlit as st
-import functions
-import complete
+"""
+web.py
+
+This module contains the main entry point for the web application.
+It uses Streamlit to render a user-friendly interface for managing tasks.
+"""
+
 import time
 from datetime import datetime
 
+import streamlit as st
+
+import functions
+import complete
+
+
+
 if "processes" not in st.session_state or not isinstance(st.session_state["processes"], list):
     st.session_state["processes"] = functions.get_processes()
+
+
 
 if "endProcess" not in st.session_state or not isinstance(st.session_state["endProcess"], list):
     st.session_state["endProcess"] = complete.get_endProcess()
 
 if "new_processes" not in st.session_state:
     st.session_state["new_processes"] = ""  # Initialize input value
+
+def get_endProcess():
+    """
+    Reads and returns the contents of the 'endProcess.txt' file as a list of lines.
+
+    Returns:
+        list: Lines from the 'endProcess.txt' file.
+    """
+    with open("endProcess.txt", "r", encoding="utf-8") as file:
+        data = file.readlines()
+    return data
+
+
+def write_file(file_path, content):
+    """Writes a list of lines to a file."""
+    with open(file_path, "w", encoding="utf-8") as file:
+        file.writelines(content)
 
 def add_process():
     process = st.session_state["new_processes"] + "\n"
@@ -66,7 +96,9 @@ st.text_input(label="", placeholder="Open new process...", key="new_processes",
 
 
 # Radio button for user selection
-columns = st.radio("Select Output Value:", ['Current Processes', 'Processes Completed'], key="selection")
+columns = st.radio("Select Output Value:",
+                   ['Current Processes', 'Processes Completed'],
+                   key="selection")
 
 # Dynamically display file contents
 if columns == "Current Processes":
@@ -74,7 +106,9 @@ if columns == "Current Processes":
         col1, col2, col3 = st.columns([3, 1, 1])
         with col1:
             # Display the task with a unique key
-            new_value = st.text_input(f"Process {i+1}:", value=task, key=f"task_input_{i}")
+            new_value = st.text_input(
+                f"Process {i+1}:", value=task, key=f"task_input_{i}"
+            )
         with col2:
             # Update button directly fetches the corresponding textbox value
             if st.button("Update Process", key=f"update_btn_{i}"):
@@ -86,6 +120,8 @@ if columns == "Current Processes":
                 st.session_state["endProcess"].append(st.session_state["processes"].pop(i))
                 functions.write_processes(st.session_state["processes"])  # Save updated processes
                 functions.write_processes(st.session_state["endProcess"])  # Save completed processes
+
+
 
 elif columns == "Processes Completed":
     for i, task in enumerate(st.session_state["endProcess"]):
@@ -102,7 +138,9 @@ elif columns == "Processes Completed":
 if st.button("Exit"):
     with st.container():
         st.warning("Are you sure you want to exit?")
-        if st.button("Yes, exit"):
+        if not st.button("Yes, exit"):
+            pass
+        else:
             st.stop()
         if st.button("No, stay"):
             st.empty()  # Clear the warning message
