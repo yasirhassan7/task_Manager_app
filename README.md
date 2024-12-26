@@ -1,17 +1,18 @@
-Task Manager Application
+#Task Manager Application
+This is a web app to showcase my Task Manager app and how it operates. 
 
 Overview
 
-This Streamlit-based Task Manager Application helps users manage and track tasks in an interactive and user-friendly interface. It allows users to:
+##This Streamlit-based Task Manager Application helps users manage and track tasks in an interactive and user-friendly interface. It allows users to:
 	•	Add new tasks (processes).
 	•	Mark tasks as completed.
 	•	View and update tasks in progress.
 	•	View and update completed tasks.
 	•	Save task data to files for persistence.
 
-The application dynamically reflects changes to tasks and uses st.session_state for maintaining state across user interactions.
+##The application dynamically reflects changes to tasks and uses st.session_state for maintaining state across user interactions.
 
-Features
+##Features
 	1.	Add Tasks
 	•	Input a new task through a text box.
 	•	The task is appended to the “Current Processes” list.
@@ -30,11 +31,11 @@ Features
 	7.	Exit Option
 	•	A simple exit confirmation prompt.
 
- Prerequisites
+ ##Prerequisites
 	•	Python 3.8 or later
 	•	Streamlit library
 
- Installation
+ ##Installation
 	1.	Clone the Repository:
  			git clone <repository_url>
 			cd <repository_folder>
@@ -51,7 +52,7 @@ Features
 				streamlit run web.py
 
 
-How to Use
+##How to Use
 	1.	Add a Task:
 	•	Use the text input box at the top to add a new task.
 	•	Press Enter, and the task will appear under “Current Processes.”
@@ -67,7 +68,7 @@ How to Use
 	•	Click the Exit button and confirm the exit prompt.
 
 
-Notes
+##Notes
 	•	Ensure the processes.txt and endProcess.txt files are writable.
 	•	State Management:
 	•	The app uses st.session_state to maintain state across user interactions.
@@ -76,9 +77,9 @@ Notes
 
 
  
- Example Command
+##Example Command
 
-To run the app locally:
+###To run the app locally:
 		streamlit run web.py
 
   Replace <repository_url> and <repository_folder> with the appropriate GitHub repository URL and folder name.
